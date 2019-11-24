@@ -28,7 +28,7 @@
         .form-wrapper {
             padding: 20px;
             border: 1px solid #ddd;
-            min-width: 350px;
+            min-width: 500px;
         }
 
         .form-wrapper .row {
@@ -49,14 +49,17 @@
             <div class="row">
                 <label>邮箱</label>
                 <input type="text" name="email">
+                <span class="error"></span>
             </div>
             <div class="row">
                 <label>密码</label>
                 <input type="password" name="password">
+                <span class="error"></span>
             </div>
             <div class="row">
                 <label>确认密码</label>
                 <input type="password" name="password_confirmation">
+                <span class="error"></span>
             </div>
             <div class="row">
                 <input type="submit" value="注册">
@@ -79,6 +82,10 @@
                 }, (request) => {
                     let { errors } = request.responseJSON
                     console.log(errors) // {email: "invalid"}
+                    if (errors.email && errors.email === 'invalid') {
+                        $('#signUpForm').find('[name="email"]').siblings('.error')
+                            .text('你输入的邮箱格式有误！')
+                    }
                 })
         })
     </script>
