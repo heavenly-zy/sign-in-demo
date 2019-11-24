@@ -45,7 +45,11 @@ var server = http.createServer(function (request, response) {
       let { email, password, password_confirmation } = hash
       if (email.indexOf('@') === -1) { // 用户输入邮箱中不存在'@'字符
         response.statusCode = 400
-        response.write('Email is error!')
+        response.write(`{
+          "errors": {
+            "email": "invalid"
+          }
+        }`)
       } else if (password !== password_confirmation) { // 用户两次输入密码不一致
         response.statusCode = 400
         response.write('Password not match!')

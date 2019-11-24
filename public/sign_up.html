@@ -77,9 +77,8 @@
                 .then((response) => {
                     console.log(response)
                 }, (request) => {
-                    if(request.responseText === 'Email is error!'){
-                        alert('你输入的邮箱格式有误')
-                    }
+                    let { errors } = JSON.parse(request.responseText)
+                    console.log(errors) // {email: "invalid"}
                 })
         })
     </script>
