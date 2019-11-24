@@ -33,8 +33,11 @@ var server = http.createServer(function (request, response) {
     response.write(string)
     response.end()
   } else if (path === '/sign_up' && method === 'POST') {
-    response.statusCode = 200
-    response.end()
+    readBody(request).then((body) => {
+      console.log(body)
+      response.statusCode = 200
+      response.end()
+    })
   } else {
     response.statusCode = 404
     response.setHeader('Content-Type', 'text/html;charset=utf-8')
@@ -44,6 +47,18 @@ var server = http.createServer(function (request, response) {
 
   /******** 代码结束，下面不要看 ************/
 })
+
+function readBody(request) {
+  return new Promise((resolve, reject) => {
+    let body = []
+    request.on('data', (chunk) => {
+      body.push(chunk)
+    }).on('end', () => {
+      body = Buffer.concat(body).toString()
+      resolve(body)
+    })
+  })
+}
 
 server.listen(port)
 console.log('监听 ' + port + ' 成功\n请用在空中转体720度然后用电饭煲打开 http://localhost:' + port)
