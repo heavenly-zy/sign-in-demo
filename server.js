@@ -34,7 +34,15 @@ var server = http.createServer(function (request, response) {
     response.end()
   } else if (path === '/sign_up' && method === 'POST') {
     readBody(request).then((body) => {
-      console.log(body)
+      let strings = body.split('&') // ['email=1', 'password=2', 'password_confirmation=3']
+      let hash = {}
+      strings.forEach((string)=>{
+        let parts = string.split('=') // ['email', '1']
+        let key = parts[0]
+        let value = parts[1]
+        hash[key] = value // hash['email'] = '1'
+      })
+      console.log(hash)
       response.statusCode = 200
       response.end()
     })
