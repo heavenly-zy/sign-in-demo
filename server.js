@@ -36,14 +36,22 @@ var server = http.createServer(function (request, response) {
     readBody(request).then((body) => {
       let strings = body.split('&') // ['email=1', 'password=2', 'password_confirmation=3']
       let hash = {}
-      strings.forEach((string)=>{
+      strings.forEach((string) => {
         let parts = string.split('=') // ['email', '1']
         let key = parts[0]
         let value = parts[1]
         hash[key] = value // hash['email'] = '1'
       })
-      console.log(hash)
-      response.statusCode = 200
+      let { email, password, password_confirmation } = hash
+      if (email.indexOf('@') === -1) { // 用户输入邮箱中不存在'@'字符
+        response.statusCode = 400
+        response.write('Email is error!')
+      } else if (password !== password_confirmation) { // 用户两次输入密码不一致
+        response.statusCode = 400
+        response.write('Password not match!')
+      } else {
+        response.statusCode = 200
+      }
       response.end()
     })
   } else {
