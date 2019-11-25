@@ -100,8 +100,21 @@ var server = http.createServer(function (request, response) {
         hash[key] = decodeURIComponent(value)
       })
       let { email, password } = hash
-      console.log(email)
-      console.log(password)
+
+      let users = fs.readFileSync('./db/users.json', 'utf8')
+      users = JSON.parse(users)
+      let foundUser = false
+      for (let i = 0; i < users.length; i++) {
+        if (users[i].email === email && users[i].password === password) { // 用户输入的邮箱与密码和数据库相匹配
+          foundUser = true
+          break
+        }
+      }
+      if (foundUser) {
+        response.statusCode = 200 // 登陆成功
+      } else {
+        response.statusCode = 401 // 登录失败
+      }
       response.end()
     })
   } else {
