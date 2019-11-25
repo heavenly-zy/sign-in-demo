@@ -83,6 +83,27 @@ var server = http.createServer(function (request, response) {
       }
       response.end()
     })
+  } else if (path === '/sign_in' && method === 'GET') {
+    let string = fs.readFileSync('./public/sign_in.html', 'utf8')
+    response.statusCode = 200
+    response.setHeader('Content-Type', 'text/html;charset=utf-8')
+    response.write(string)
+    response.end()
+  } else if (path === '/sign_in' && method === 'POST') {
+    readBody(request).then((body) => {
+      let strings = body.split('&')
+      let hash = {}
+      strings.forEach((string) => {
+        let parts = string.split('=')
+        let key = parts[0]
+        let value = parts[1]
+        hash[key] = decodeURIComponent(value)
+      })
+      let { email, password } = hash
+      console.log(email)
+      console.log(password)
+      response.end()
+    })
   } else {
     response.statusCode = 404
     response.setHeader('Content-Type', 'text/html;charset=utf-8')
