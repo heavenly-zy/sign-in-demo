@@ -109,6 +109,9 @@
                     if (errors.email && errors.email === 'invalid') {
                         $form.find('[name="email"]').siblings('.error')
                             .text('你输入的邮箱格式有误！')
+                    } else if (errors.email && errors.email === 'exist') {
+                        $form.find('[name="email"]').siblings('.error')
+                            .text('邮箱已注册！')
                     }
                 })
         })

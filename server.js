@@ -57,10 +57,29 @@ var server = http.createServer(function (request, response) {
       } else {
         let users = fs.readFileSync('./db/users.json', 'utf8')
         users = JSON.parse(users) // []
-        users.push({ email: email, password: password })
-        let usersString = JSON.stringify(users)
-        fs.writeFileSync('./db/users.json', usersString)
-        response.statusCode = 200
+        let userExist = false
+        // 判断用户是否已存在
+        for (let i = 0; i < users.length; i++) {
+          let user = users[i]
+          if (user.email === email) {
+            userExist = true
+            break
+          }
+        }
+        if (userExist) { // 用户已存在
+          response.statusCode = 400
+          response.setHeader('Content-Type', 'text/json;charset=utf-8')
+          response.write(`{
+            "errors": {
+              "email": "exist"
+            }
+          }`)
+        } else {
+          users.push({ email: email, password: password })
+          let usersString = JSON.stringify(users)
+          fs.writeFileSync('./db/users.json', usersString)
+          response.statusCode = 200
+        }
       }
       response.end()
     })
