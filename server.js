@@ -22,9 +22,34 @@ var server = http.createServer(function (request, response) {
   console.log('有个傻子发请求过来啦！路径（带查询参数）为：' + pathWithQuery)
 
   if (path === '/') {
+    let string = fs.readFileSync('./public/index.html', 'utf8')
+    let cookies = request.headers.cookie.split('; ')
+    let hash = {}
+    for (let i = 0; i < cookies.length; i++) {
+      let parts = cookies[i].split('=')
+      let key = parts[0]
+      let value = parts[1]
+      hash[key] = value
+    }
+    let email = hash.sign_in_email // 从cookie获取到的email
+    let users = fs.readFileSync('./db/users.json', 'utf8')
+    users = JSON.parse(users)
+    let foundUser
+    for (let i = 0; i < users.length; i++) {
+      if (users[i].email === email) {
+        foundUser = users[i]
+        break
+      }
+    }
+    console.log(foundUser)
+    if (foundUser) {
+      string = string.replace('__password__', foundUser.password)
+    } else {
+      string = string.replace('__password__', '不知道')
+    }
     response.statusCode = 200
     response.setHeader('Content-Type', 'text/html;charset=utf-8')
-    response.write(`二哈`)
+    response.write(string)
     response.end()
   } else if (path === '/sign_up' && method === 'GET') {
     response.statusCode = 200
