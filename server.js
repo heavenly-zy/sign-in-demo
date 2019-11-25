@@ -55,6 +55,11 @@ var server = http.createServer(function (request, response) {
         response.statusCode = 400
         response.write('Password not match!')
       } else {
+        let users = fs.readFileSync('./db/users.json', 'utf8')
+        users = JSON.parse(users) // []
+        users.push({ email: email, password: password })
+        let usersString = JSON.stringify(users)
+        fs.writeFileSync('./db/users.json', usersString)
         response.statusCode = 200
       }
       response.end()
