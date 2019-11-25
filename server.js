@@ -40,7 +40,7 @@ var server = http.createServer(function (request, response) {
         let parts = string.split('=') // ['email', '1']
         let key = parts[0]
         let value = parts[1]
-        hash[key] = value // hash['email'] = '1'
+        hash[key] = decodeURIComponent(value) // hash['email'] = '1'
       })
       let { email, password, password_confirmation } = hash
       if (email.indexOf('@') === -1) { // 用户输入邮箱中不存在'@'字符
