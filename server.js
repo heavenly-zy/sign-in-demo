@@ -111,6 +111,7 @@ var server = http.createServer(function (request, response) {
         }
       }
       if (foundUser) {
+        response.setHeader('Set-Cookie', `sign_in_email=${email};HttpOnly`)
         response.statusCode = 200 // 登陆成功
       } else {
         response.statusCode = 401 // 登录失败
